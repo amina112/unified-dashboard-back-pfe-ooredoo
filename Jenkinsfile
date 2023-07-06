@@ -10,7 +10,7 @@ pipeline{
             steps{
       			checkout([$class: 'GitSCM', branches: [[name: '*/main']],
 			extensions: [],
-			userRemoteConfigs: [[url: 'https://github.com/med-aziz-ben-haha/unified-dashboard-back-pfe-ooredoo.git']]])
+			userRemoteConfigs: [[url: 'https://github.com/amina112/unified-dashboard-back-pfe-ooredoo.git']]])
             }
         }
 
@@ -42,7 +42,7 @@ pipeline{
         stage('Code Quality Check via SonarQube') {
             steps{
 
-             		sh "  mvn sonar:sonar -Dsonar.projectKey=cicdback -Dsonar.host.url=http://192.168.1.71:9000 -Dsonar.login=60d631e8fd8ff2028e57bd880661e017640651cb"
+             		sh "  mvn sonar:sonar -Dsonar.projectKey=cicdback -Dsonar.host.url=http://192.168.1.71:9000 -Dsonar.login=902ab35323cbaccc0f3822088be98d719a5ae95b"
 
             }
         }
@@ -52,7 +52,7 @@ pipeline{
             steps {
 
 
-  sh 'mvn clean package deploy:deploy-file -DgroupId=com.ooredoo -DartifactId=unified_dashboad -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://192.168.1.71:8081/repository/unified-dashboard-pfe-ooredoo/ -Dfile=target/unified_dashboad-1.0.jar'
+  sh 'mvn clean package deploy:deploy-file -DgroupId=com.ooredoo -DartifactId=unified_dashboad -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://192.168.1.71:8081/repository/maven-releases/ -Dfile=target/unified_dashboad-1.0.jar'
 
 
             }
@@ -61,7 +61,7 @@ pipeline{
 stage('Build Docker Image') {
                       steps {
                           script {
-                            sh 'docker build -t azizbenhaha/unified-dashboard-back-pfe-ooredoo:latest .'
+                            sh 'docker build -t amina112/unified-dashboard-back-pfe-ooredoo:latest .'
                           }
                       }
                   }
@@ -69,13 +69,13 @@ stage('Build Docker Image') {
                   stage('login dockerhub') {
                                         steps {
                                      // sh 'echo dckr_pat_-SnwrdC_ELsL6it2JT6cgIcAlrs | docker login -u azizbenhaha --password-stdin'
-				sh 'docker login -u azizbenhaha --password dckr_pat_-SnwrdC_ELsL6it2JT6cgIcAlrs'
+				sh 'docker login -u amina112 --password dckr_pat_8OSWnW41TCPuZGoQGGJbi7N3x7I'
                                             }
 		  }
 	    
 	                      stage('Push Docker Image') {
                                         steps {
-                                   sh 'docker push azizbenhaha/unified-dashboard-back-pfe-ooredoo:latest'
+                                   sh 'docker push amina112/unified-dashboard-back-pfe-ooredoo:latest'
                                             }
 		  }
 
@@ -103,6 +103,8 @@ Keep working !
             cleanWs()
        }
     }
+
+    
 
     
 	
