@@ -8,7 +8,7 @@ pipeline{
 
         stage('Getting project from Git') {
             steps{
-      			checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+      			checkout([$class: 'GitSCM', branches: [[name: '*/master']],
 			extensions: [],
 			userRemoteConfigs: [[url: 'https://github.com/amina112/unified-dashboard-back-pfe-ooredoo.git']]])
             }
