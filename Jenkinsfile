@@ -42,7 +42,7 @@ pipeline{
         stage('Code Quality Check via SonarQube') {
             steps{
 
-             		sh "  mvn sonar:sonar -Dsonar.projectKey=cicdback -Dsonar.host.url=http://192.168.1.71:9000 -Dsonar.login=902ab35323cbaccc0f3822088be98d719a5ae95b"
+             		sh "  mvn sonar:sonar -Dsonar.projectKey=cicdback -Dsonar.host.url=http://192.168.3.8:9000 -Dsonar.login=902ab35323cbaccc0f3822088be98d719a5ae95b"
 
             }
         }
@@ -52,7 +52,7 @@ pipeline{
             steps {
 
 
-  sh 'mvn clean package deploy:deploy-file -DgroupId=com.ooredoo -DartifactId=unified_dashboad -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://192.168.1.71:8081/repository/maven-releases/ -Dfile=target/unified_dashboad-1.0.jar'
+  sh 'mvn clean package deploy:deploy-file -DgroupId=com.ooredoo -DartifactId=unified_dashboad -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://192.168.3.8:8081/repository/maven-releases/ -Dfile=target/unified_dashboad-1.0.jar'
 
 
             }
