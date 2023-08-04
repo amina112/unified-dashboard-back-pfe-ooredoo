@@ -42,7 +42,7 @@ pipeline{
         stage('Code Quality Check via SonarQube') {
             steps{
 
-             		sh "  mvn sonar:sonar -Dsonar.projectKey=cicdback -Dsonar.host.url=http://192.168.3.8:9000 -Dsonar.login=902ab35323cbaccc0f3822088be98d719a5ae95b"
+             		sh "  mvn sonar:sonar -Dsonar.projectKey=cicdback -Dsonar.host.url=http://192.168.3.9:9000 -Dsonar.login=902ab35323cbaccc0f3822088be98d719a5ae95b"
 
             }
         }
