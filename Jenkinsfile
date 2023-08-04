@@ -52,7 +52,7 @@ pipeline{
             steps {
 
 
-  sh 'mvn clean package deploy:deploy-file -DgroupId=com.ooredoo -DartifactId=unified_dashboad -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://192.168.3.8:8081/repository/maven-releases/ -Dfile=target/unified_dashboad-1.0.jar'
+  sh 'mvn clean package deploy:deploy-file -DgroupId=com.ooredoo -DartifactId=unified_dashboad -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://192.168.3.9:8081/repository/maven-releases/ -Dfile=target/unified_dashboad-1.0.jar'
 
 
             }
