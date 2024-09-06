@@ -2,10 +2,22 @@ package com.ooredoo.services;
 
 import com.ooredoo.entities.*;
 import com.ooredoo.repositories.DatacenterRepository;
-import org.springframework.stereotype.Service;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
 
 
 @Service
@@ -117,5 +129,60 @@ public class DatacenterService {
     //delete multipe
     public void deleteMultipleDatacentersByName(List<String> names) { DatacenterRepository.deleteAllByNameIn(names);}
 
+    public void importDatacentersFromExcel(MultipartFile file) {
+        List<Datacenter> datacenters = new ArrayList<>();
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
 
+            Sheet sheet = workbook.getSheetAt(0); // Read the first sheet
+            for (Row row : sheet) {
+
+                if (row.getRowNum() == 0) {
+                    continue; // Skip header row
+                }
+
+                // Read and process each cell with type and whitespace management
+                String name = getStringValue(row.getCell(0));
+                int DatastoreClusters = (int) getNumericValue(row.getCell(1));
+                int Datastores = (int) getNumericValue(row.getCell(2));
+                int Hypervisors = (int) getNumericValue(row.getCell(3));
+                int VirtualMachines = (int) getNumericValue(row.getCell(4));
+
+                Datacenter datacenter = new Datacenter(name, DatastoreClusters, Datastores, Hypervisors, VirtualMachines);
+                datacenters.add(datacenter);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Save Datacenters to the Neo4j database
+        DatacenterRepository.saveAll(datacenters);
+    }
+
+    // Utility methods for handling cell types
+    private double getNumericValue(Cell cell) {
+        if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        } else if (cell != null && cell.getCellType() == CellType.STRING) {
+            String cellValue = cell.getStringCellValue().replace(" ", "").replace(",", "");
+            try {
+                return Double.parseDouble(cellValue);
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        return 0.0;
+    }
+
+    private String getStringValue(Cell cell) {
+        return cell != null && cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : "";
+    }
+
+    public List<Datacenter> getDatacenters() {
+        return DatacenterRepository.findAll();
+    }
 }
+
+
+
