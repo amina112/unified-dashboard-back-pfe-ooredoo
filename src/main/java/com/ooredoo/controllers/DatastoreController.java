@@ -5,6 +5,7 @@ import com.ooredoo.entities.VM;
 import com.ooredoo.services.DatastoreService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -70,6 +71,26 @@ public class DatastoreController {
     public ResponseEntity<String> deleteMultipleDatastoresByName(@RequestBody List<String> names) {
         DatastoreService.deleteMultipleDatastoresByName(names);
         return ResponseEntity.ok("Datastores deleted successfully");
+        // http://localhost:8089/ooredoo/Datastore/upload
+
+    }
+    @PostMapping("/upload")
+    public String uploadDatastoresFile(@RequestParam("fileDs") MultipartFile file) {
+        if (file.isEmpty()) {
+            return "Fichier vide!";
+        }
+        try {
+            DatastoreService.importDatastoresFromExcel(file);
+            return "Données datastores importées avec succès!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erreur lors de l'importation des données.";
+        }
+    }
+
+    @GetMapping
+    public List<Datastore> getDatastores() {
+        return DatastoreService.getDatastores();
     }
 
 }
