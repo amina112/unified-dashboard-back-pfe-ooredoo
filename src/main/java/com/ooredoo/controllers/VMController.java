@@ -4,6 +4,7 @@ import com.ooredoo.entities.VM;
 import com.ooredoo.services.VMService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -71,6 +72,23 @@ public class VMController {
         return ResponseEntity.ok("VMs deleted successfully");
     }
 
+    @PostMapping("/upload")
+    public String uploadClientsFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return "Fichier vide!";
+        }
+        try {
+        	VMService.importClientsFromExcel(file);
+            return "Données clients importées avec succès!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erreur lors de l'importation des données.";
+        }
+    }
 
+    @GetMapping("/vms")
+    public List<VM> getAllClients() {
+        return VMService.getAllClients();
+    }
 
 }
