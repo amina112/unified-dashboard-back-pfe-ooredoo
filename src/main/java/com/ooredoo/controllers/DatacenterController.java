@@ -4,6 +4,7 @@ import com.ooredoo.entities.Datacenter;
 import com.ooredoo.services.DatacenterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -78,5 +79,25 @@ public class DatacenterController {
         DatacenterService.deleteMultipleDatacentersByName(names);
         return ResponseEntity.ok("Datacenters deleted successfully");
     }
+    // http://localhost:8089/ooredoo/Datacenter/upload
+    @PostMapping("/upload")
+    public String uploadDatacentersFile(@RequestParam("fileDa") MultipartFile file) {
+        if (file.isEmpty()) {
+            return "Fichier vide!";
+        }
+        try {
+            DatacenterService.importDatacentersFromExcel(file);
+            return "Données datacenters importées avec succès!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erreur lors de l'importation des données.";
+        }
+    }
 
+    @GetMapping
+    public List<Datacenter> getDatacenters() {
+        return DatacenterService.getDatacenters();
+    }
 }
+
+
