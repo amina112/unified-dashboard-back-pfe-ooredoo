@@ -116,7 +116,6 @@ public class VM {
         Write_Throughput = write_Throughput;
         this.name = name;
         this.vCPUs = vCPUs;
-        Datastores = datastores;
     }
 
 }
