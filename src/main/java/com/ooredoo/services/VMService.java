@@ -5,12 +5,28 @@ import com.ooredoo.entities.VM;
 import com.ooredoo.repositories.VMRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import com.ooredoo.repositories.VMRepository;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 
 @Service
 public class VMService {
@@ -76,7 +92,74 @@ public class VMService {
     //delete single
     public void deleteSingleVMByName(String name) { VMRepository.deleteByName(name);}
     //delete multipe
-    public void deleteMultipleVMsByName(List<String> names) { VMRepository.deleteAllByNameIn(names);}
+    public void deleteMultipleVMsByName(List<String> names) { VMRepository.deleteAllByNameIn(names);
+    }
+
+    public void importClientsFromExcel(MultipartFile file) {
+        List<VM> vms = new ArrayList<>();
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0); // Lire la première feuille
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) {
+                    continue; // Skip header row
+                }
+
+                // Lire et traiter chaque cellule avec gestion des types et espaces
+                double CPU_Usage = getNumericValue(row.getCell(0));
+                double CPU_Utilization = getNumericValue(row.getCell(1));
+                String IP = getStringValue(row.getCell(2));
+                long Memory_Size = (long) getNumericValue(row.getCell(3));
+                double Memory_Utilization = getNumericValue(row.getCell(4));
+                long Provisioned_Space = (long) getNumericValue(row.getCell(5));
+                long Read_Throughput = (long) getNumericValue(row.getCell(6));
+                String Resource_Pool = getStringValue(row.getCell(7));
+                String State = getStringValue(row.getCell(8));
+                String Status = getStringValue(row.getCell(9));
+                long Throughput = (long) getNumericValue(row.getCell(10));
+                long Used_Space = (long) getNumericValue(row.getCell(11));
+                long Virtual_Disk_Bandwidth = (long) getNumericValue(row.getCell(12));
+                long Write_Throughput = (long) getNumericValue(row.getCell(13));
+                String name = getStringValue(row.getCell(14));
+                int vCPUs = (int) getNumericValue(row.getCell(15));
+                String Guest_OS = getStringValue(row.getCell(16));
+
+                VM vm = new VM(CPU_Usage, CPU_Utilization, IP, Memory_Size, Memory_Utilization, Provisioned_Space, Read_Throughput, Resource_Pool, State, Status, Throughput, Used_Space, Virtual_Disk_Bandwidth, Write_Throughput, name, vCPUs, Guest_OS);
+                vms.add(vm);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Sauvegarder les VM dans la base de données Neo4j
+        VMRepository.saveAll(vms);
+    }
+
+    // Méthodes utilitaires pour gérer les types de cellules
+    private double getNumericValue(Cell cell) {
+        if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        } else if (cell != null && cell.getCellType() == CellType.STRING) {
+            // Supprimer les espaces dans les nombres formatés avec des séparateurs
+            String cellValue = cell.getStringCellValue().replace(" ", "").replace(",", "");
+            try {
+                return Double.parseDouble(cellValue);
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        return 0.0;
+    }
+
+    private String getStringValue(Cell cell) {
+        return cell != null && cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : "";
+    }
+   
+   public List<VM> getAllClients() {
+        return VMRepository.findAll();
+    }
 
 
 }
