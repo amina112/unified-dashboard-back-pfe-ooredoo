@@ -4,6 +4,7 @@ import com.ooredoo.entities.HypervisorCluster;
 import com.ooredoo.services.HypervisorClusterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -73,5 +74,23 @@ public class HypervisorClusterController {
         HypervisorClusterService.deleteMultipleHypervisorClustersByName(names);
         return ResponseEntity.ok("HypervisorClusters deleted successfully");
     }
+    @PostMapping("/upload")
+    public String uploadHypervisorClustersFile(@RequestParam("file1") MultipartFile file) {
+        if (file.isEmpty()) {
+            return "Fichier vide!";
+        }
+        try {
+            HypervisorClusterService.importHypervisorClustersFromExcel(file);
+            return "Données clusters d'hyperviseurs importées avec succès!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erreur lors de l'importation des données.";
+        }
+    }
 
+    // Endpoint pour récupérer tous les clusters d'hyperviseurs
+    @GetMapping
+    public List<HypervisorCluster> getHypervisorClusters() {
+        return HypervisorClusterService.getHypervisorClusters();
+    }
 }
