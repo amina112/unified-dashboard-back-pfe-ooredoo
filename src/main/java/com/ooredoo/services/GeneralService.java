@@ -54,7 +54,7 @@ public class GeneralService {
 
     public Map<String, Object> DatacenterDatastoreClusterList = new HashMap<>();
     public void linkDatacenterDatastoreClusters(){
-        DatacenterDatastoreClusterList.put("Datacenter", "Test Datacenter");
+        DatacenterDatastoreClusterList.put("Datacenter", "MSI-Charguia");
         DatacenterDatastoreClusterList.put("DatastoreClusters", Arrays.asList("Test DatastoreCluster 1", "Test DatastoreCluster"));
     }
     public void updateRelationshipBetweenOneDatacenterAndDatastoreClusters(Map<String, Object> DatacenterDatastoreClusterList) {
@@ -82,7 +82,7 @@ public class GeneralService {
 
     public Map<String, Object> DatacenterDatastoreList = new HashMap<>();
     public void linkDatacenterDatastores(){
-        DatacenterDatastoreList.put("Datacenter", "DatacenterTest1");
+        DatacenterDatastoreList.put("Datacenter", "MSI-Charguia");
         DatacenterDatastoreList.put("Datastores", Arrays.asList("TestDatastore1", "TestDatastore"));
     }
     public void updateRelationshipBetweenOneDatacenterAndDatastores(Map<String, Object> DatacenterDatastoreList) {
@@ -111,7 +111,7 @@ public class GeneralService {
     public Map<String, Object> DatastoreClusterDatastoreList = new HashMap<>();
     public void linkDatastoreClusterDatastores(){
         DatastoreClusterDatastoreList.put("DatastoreCluster", "DatastoreClusterTest1");
-        DatastoreClusterDatastoreList.put("Datastores", Arrays.asList("TestDatastore1", "TestDatastore"));
+        DatastoreClusterDatastoreList.put("Datastores", Arrays.asList("VxRail-Virtual-SAN-Datastore"));
     }
     public void updateRelationshipBetweenOneDatastoreClusterAndDatastores(Map<String, Object> DatastoreClusterDatastoreList) {
         String DatastoreClusterName = (String) DatastoreClusterDatastoreList.get("DatastoreCluster");
@@ -138,8 +138,21 @@ public class GeneralService {
 
     public Map<String, Object> DatastoreVMList = new HashMap<>();
     public void linkDatastoreVMs(){
-        DatastoreVMList.put("Datastore", "DatastoreTest1");
-        DatastoreVMList.put("VMs", Arrays.asList("TestVM1", "TestVM"));
+        DatastoreVMList.put("Datastore", "VxRail-Virtual-SAN-Datastore");
+       // DatastoreVMList.put("VMs", Arrays.asList("TestVM1", "TestVM"));
+        DatastoreVMList.put("VMs", Arrays.asList(  "aads", 
+        	    "aawg2", 
+        	    "acs-core-pp", 
+        	    "acs-db-01", 
+        	    "acs-db-02", 
+        	    "acs-db-pp", 
+        	    "acs-front-01", 
+        	    "acs-front-02", 
+        	    "acs-front-03", 
+        	    "acs-front-04"
+        	));
+        	  
+
     }
     public void updateRelationshipBetweenOneDatastoreAndVMs(Map<String, Object> DatastoreVMList) {
         String DatastoreName = (String) DatastoreVMList.get("Datastore");
@@ -166,8 +179,8 @@ public class GeneralService {
 
     public Map<String, Object> DatacenterHypervisorClusterList = new HashMap<>();
     public void linkDatacenterHypervisorClusters(){
-        DatacenterHypervisorClusterList.put("Datacenter", "DatacenterTest1");
-        DatacenterHypervisorClusterList.put("HypervisorClusters", Arrays.asList("TestHypervisorCluster1", "TestHypervisorCluster"));
+        DatacenterHypervisorClusterList.put("Datacenter", "MSI-Charguia");
+        DatacenterHypervisorClusterList.put("HypervisorClusters", Arrays.asList("VxRail"));
     }
     public void updateRelationshipBetweenOneDatacenterAndHypervisorClusters(Map<String, Object> DatacenterHypervisorClusterList) {
         String DatacenterName = (String) DatacenterHypervisorClusterList.get("Datacenter");
@@ -194,8 +207,8 @@ public class GeneralService {
 
     public Map<String, Object> HypervisorClusterHypervisorList = new HashMap<>();
     public void linkHypervisorClusterHypervisors(){
-        HypervisorClusterHypervisorList.put("HypervisorCluster", "HypervisorClusterTest1");
-        HypervisorClusterHypervisorList.put("Hypervisors", Arrays.asList("TestHypervisor1", "TestHypervisor"));
+        HypervisorClusterHypervisorList.put("HypervisorCluster", "VXRAIL");
+        HypervisorClusterHypervisorList.put("Hypervisors", Arrays.asList("vxrail-in-vas02.orange.net", "vxrail-in-vas01.orange.net"));
     }
     public void updateRelationshipBetweenOneHypervisorClusterAndHypervisors(Map<String, Object> HypervisorClusterHypervisorList) {
         String HypervisorClusterName = (String) HypervisorClusterHypervisorList.get("HypervisorCluster");
@@ -222,8 +235,17 @@ public class GeneralService {
 
     public Map<String, Object> HypervisorVMList = new HashMap<>();
     public void linkHypervisorVMs(){
-        HypervisorVMList.put("Hypervisor", "HypervisorTest1");
-        HypervisorVMList.put("VMs", Arrays.asList("TestVM1", /*"TestVM2",*/ "TestVM"));
+       // HypervisorVMList.put("Hypervisor", "HypervisorTest1");
+       // HypervisorVMList.put("VMs", Arrays.asList("TestVM1", /*"TestVM2",*/ "TestVM"));
+        HypervisorVMList.put("Hypervisor", "vxrail-in-vas01.orange.net");
+        HypervisorVMList.put("VMs", Arrays.asList("aawg2", "acs-db-01", "acs-db-pp","acs-front-04","acs-gui-pp","acs-lb-02","acs-lb-04","ACS-Test","ANAIS_TB","App_server02"));
+       // HypervisorVMList.put("Hypervisor", "vxrail-in-vas02.orange.net");
+        /*HypervisorVMList.put("VMs", Arrays.asList("aads",
+        		 "acs-front-01",
+        	 "acs-front-02",
+        		 "acs-lb-01",
+        		 "acs-lb-03","ANAIS_BE1","EIR1","EIR2","EIR-JUMP-VM"
+        	)); */
     }
     public void updateRelationshipBetweenOneHypervisorAndVMs(Map<String, Object> hypervisorVMList) {
         String hypervisorName = (String) hypervisorVMList.get("Hypervisor");
@@ -262,10 +284,9 @@ public class GeneralService {
 
     public List<Datacenter> DatacentersList = new ArrayList<>();
     public void addDatacenterToList() {
-        DatacentersList.add(new Datacenter("OT-Mghira", 9, 120, 26, 377));
-        DatacentersList.add(new Datacenter("Datacenter", 0, 80, 11, 246));
-        DatacentersList.add(new Datacenter("OT-Charguia", 4, 87, 19, 546));
-        DatacentersList.add(new Datacenter("Test Datacenter", 4, 87, 19, 546));
+        DatacentersList.add(new Datacenter("MSI-Charguia", 9, 120, 26, 377));
+        DatacentersList.add(new Datacenter("MSI-Lac", 0, 80, 11, 246));
+        DatacentersList.add(new Datacenter("MSI-Sousse", 4, 87, 19, 546));
 
     }
 
@@ -314,7 +335,7 @@ public class GeneralService {
 
     public List<Datastore> DatastoresList = new ArrayList<>();
     public void addDatastoreToList() {
-        DatastoresList.add(new Datastore("ExtP_Unify_ITAAS_U550F_LOCAL_DS09", "VMFS", 3399.68, 744.27, 0.0, 696.07, 0.0, 0.0, 0, 4095.75));
+       /* DatastoresList.add(new Datastore("ExtP_Unify_ITAAS_U550F_LOCAL_DS09", "VMFS", 3399.68, 744.27, 0.0, 696.07, 0.0, 0.0, 0, 4095.75));
         DatastoresList.add(new Datastore("ExtP_Unify_ITAAS_U550F_LOCAL_DS10", "VMFS", 3862.76, 281.2, 0.0, 232.99, 0.0, 0.0, 0, 4095.75));
         DatastoresList.add(new Datastore("Bck_Unify_NFVWL_VNX5600_DS00", "VMFS", 1985.05, 2248.86, 23.0, 2110.45, 0.0, 0.21, 6, 4095.5));
         DatastoresList.add(new Datastore("Bck_Unify_NFVWL_VNX5600_DS04", "VMFS", 1068.62, 1037.35, 35.0, 979.13, 0.0, 0.23, 6, 2047.75));
@@ -324,6 +345,19 @@ public class GeneralService {
         DatastoresList.add(new Datastore("CHA_UNIFY_ITAAS_UNITY480_LOCAL_LUN-00", "VMFS", 17.09, 5102.66, 1374.0, 5102.66, 21.0, 41.17, 8, 5119.75));
         DatastoresList.add(new Datastore("test DS", "VMFS", 3399.68, 744.27, 302.1, 696.07, 0.2, 25.6, 10, 4095.75));
         DatastoresList.add(new Datastore("test DS1", "VMFS", 3399.68, 744.27, 302.1, 696.07, 0.2, 0.6, 10, 4095.75));
+*/       DatastoresList.add(new Datastore(
+	    "VxRail-Virtual-SAN-Datastore", 
+	    "vSAN Enterprise", 
+	    52400.0,          // Capacity in GB (52.4 TB)
+	    35930.0,          // UsedSpace in GB (35.93 TB)
+	    16470.0,          // FreeSpace in GB (16.47 TB)
+	    0.0,              // Bandwidth (not provided, so defaulting to 0.0)
+	    0.0,              // Latency (not provided, so defaulting to 0.0)
+	    0.0,              // Throughput (not provided, so defaulting to 0.0)
+	    0,                // Hypervisors (not provided, so defaulting to 0)
+	    95000.0           // Provisioned in GB (95 TB)
+	));
+
 
     }
 
@@ -349,7 +383,7 @@ public class GeneralService {
         HypervisorClustersList.add(new HypervisorCluster("ITaas", 3, 5, 368, 1278));
         HypervisorClustersList.add(new HypervisorCluster("ITaas Workload", 2, 15, 1160, 12284));
         HypervisorClustersList.add(new HypervisorCluster("Edge", 0, 10, 757, 6653));
-        HypervisorClustersList.add(new HypervisorCluster("Test Hypervisor-Cluster", 0, 10, 757, 6653));
+        HypervisorClustersList.add(new HypervisorCluster("VXRAIL", 0, 10, 757, 6653));
 
     }
 
@@ -372,7 +406,7 @@ public class GeneralService {
 
     public List<Hypervisor> HypervisorsList = new ArrayList<>();
     public void addHypervisorToList() {
-        HypervisorsList.add(new Hypervisor("cha-esxi-itaas04.intra.local", 48.78, 140.97, 76.77, "CH121 V3", "Normal", 88, 1048173, "VMware ESXi 7.0.3 build-20328353"));
+       /* HypervisorsList.add(new Hypervisor("cha-esxi-itaas04.intra.local", 48.78, 140.97, 76.77, "CH121 V3", "Normal", 88, 1048173, "VMware ESXi 7.0.3 build-20328353"));
         HypervisorsList.add(new Hypervisor("mgh-esxi-itaas03.intra.local", 45.14, 254.57, 88.26, "ProLiant BL460c Gen9", "Normal", 64, 524158, "VMware ESXi 7.0.3 build-20036589"));
         HypervisorsList.add(new Hypervisor("mgh-esxi-edge04.intra.local", 1.18, 0.06, 3.29, "ProLiant BL460c Gen9", "Normal", 64, 524158, "VMware ESXi 7.0.3 build-20036589"));
         HypervisorsList.add(new Hypervisor("mgh-esxi-edge01.intra.local", 1.36, 0.29, 2.0, "ProLiant BL460c Gen9", "Normal", 64, 524158, "VMware ESXi 7.0.3 build-20036589"));
@@ -382,6 +416,16 @@ public class GeneralService {
         HypervisorsList.add(new Hypervisor("esxi04-itaas.unifydev.local", 68.78, 0.98, 95.38, "CH121 V3", "Alert", 74, 261749, "VMware ESXi 6.5.0 build-4887370"));
         HypervisorsList.add(new Hypervisor("HypervisorTest", 48.78, 140.0, 76.77, "V3", "Normal", 8, 14, "VMware ESXi 7.0.3 build-20328353"));
         HypervisorsList.add(new Hypervisor("HypervisorTest1", 8.78, 40.0, 6.77, "V2", "Normal", 8, 14, "VMware ESXi 7.0.3 build-20328353"));
+*/  HypervisorsList.add(new Hypervisor("vxrail-in-vas01.orange.net", 8.78, 40.0, 6.77, "Model1", "Normal", 8, 14, "VMware ESXi 7.0.3 build-20328353"));
+HypervisorsList.add(new Hypervisor("vxrail-in-vas02.orange.net", 8.90, 45.0, 7.00, "Model2", "Normal", 8, 16, "VMware ESXi 7.0.3 build-20328353"));
+HypervisorsList.add(new Hypervisor("vxrail-in-vas03.orange.net", 8.60, 42.0, 6.85, "Model3", "Normal", 8, 14, "VMware ESXi 7.0.3 build-20328353"));
+HypervisorsList.add(new Hypervisor("vxrail-in-vas05.orange.net", 8.70, 43.0, 6.90, "Model4", "Normal", 8, 15, "VMware ESXi 7.0.3 build-20328353"));
+HypervisorsList.add(new Hypervisor("vxrail-in-vas06.orange.net", 9.00, 47.0, 7.20, "Model5", "Normal", 8, 18, "VMware ESXi 7.0.3 build-20328353"));
+HypervisorsList.add(new Hypervisor("vxrail-in-vas07.orange.net", 9.10, 48.0, 7.30, "Model6", "Normal", 8, 20, "VMware ESXi 7.0.3 build-20328353"));
+HypervisorsList.add(new Hypervisor("vxrailesxi01.orange.intra.tn", 7.50, 35.0, 5.70, "Model7", "Normal", 8, 12, "VMware ESXi 6.0.0 build-6921384"));
+HypervisorsList.add(new Hypervisor("vxrailesxi02.orange.intra.tn", 7.60, 36.0, 5.80, "Model8", "Normal", 8, 13, "VMware ESXi 6.0.0 build-6921384"));
+HypervisorsList.add(new Hypervisor("vxrailesxi03.orange.intra.tn", 7.55, 35.5, 5.75, "Model9", "Normal", 8, 12, "VMware ESXi 6.0.0 build-6921384"));
+HypervisorsList.add(new Hypervisor("vxrailesxi04.orange.intra.tn", 7.65, 36.5, 5.85, "Model10", "Normal", 8, 13, "VMware ESXi 6.0.0 build-6921384"));
 
     }
 
@@ -404,7 +448,7 @@ public class GeneralService {
 
     public List<VM> VMsList = new ArrayList<>();
     public void addVMToList() {
-        VMsList.add(new VM("vmNAFprod2", 2, "Powered On", 0.6, "Red Hat Enterprise Linux 8 (64-bit)", "192.168.1.100", "Resources", new ArrayList<>(), 80, 60, 4096, "Normal", 200, 0.7, 50, 30, 0.4, 100));
+       /* VMsList.add(new VM("vmNAFprod2", 2, "Powered On", 0.6, "Red Hat Enterprise Linux 8 (64-bit)", "192.168.1.100", "Resources", new ArrayList<>(), 80, 60, 4096, "Normal", 200, 0.7, 50, 30, 0.4, 100));
         VMsList.add(new VM("Customized RHEL 7.5 (b0732cab-9479-40bf-99f8-ba4820ff26cb)", 12, "Powered On", 0.4, "VMware Photon OS (64-bit)", "192.10.1.100", "MGH-OrgvDC (335a414f-75d3-4f1e-b36a-7a88ac1f202d)", new ArrayList<>(), 80, 20, 6056, "Alert", 200, 0.7, 50, 30, 0.4, 150));
         VMsList.add(new VM("vmPrepCasApp2", 2, "Powered On", 0.6, "Linux 4.18.0-80.el8.x86_64 Red Hat Enterprise Linux release 8.0 (Ootpa)", "10.184.1.10", "MGH-OrgvDC (335a414f-75d3-4f1e-b36a-7a88ac1f202d)", new ArrayList<>(), 80, 60, 4096, "Normal", 200, 0.7, 50, 30, 0.4, 100));
         VMsList.add(new VM("noi-devcol-01", 2, "Powered On", 0.6, "Red Hat Enterprise Linux 8 (64-bit)", "192.168.1.100", "Resources", new ArrayList<>(), 80, 60, 4096, "Normal", 200, 0.7, 50, 30, 0.4, 100));
@@ -418,8 +462,25 @@ public class GeneralService {
         VMsList.add(new VM("VM-Rhel-Hiba-", 2, "Powered On", 0.6, "Red Hat Enterprise Linux 8 (64-bit)", "192.168.1.100", "Resources", new ArrayList<>(), 80, 60, 4096, "Normal", 200, 0.7, 50, 30, 0.4, 100));
         VMsList.add(new VM("VM-CDHTestWKn02", 12, "Powered On", 0.4, "VMware Photon OS (64-bit)", "192.10.1.100", "MGH-OrgvDC (335a414f-75d3-4f1e-b36a-7a88ac1f202d)", new ArrayList<>(), 80, 20, 6056, "Alert", 200, 0.7, 50, 30, 0.4, 150));
         VMsList.add(new VM("VMSoftSecCent", 6, "Powered Off", 0.2, "Red Hat Enterprise Linux 6 (64-bit)", "192.168.1.155", "Resources", new ArrayList<>(), 80, 320, 512, "Unknown", 200, 0.9, 41, 32, 0.4, 1235));
-        VMsList.add(new VM("rm2dev.orascomtunisie.com", 22, "Powered On", 0.6, "Linux 4.18.0-80.el8.x86_64 Red Hat Enterprise Linux release 8.0 (Ootpa)", "10.184.1.10", "MGH-OrgvDC (335a414f-75d3-4f1e-b36a-7a88ac1f202d)", new ArrayList<>(), 80, 6350, 34096, "Normal", 2020, 0.7, 560, 340, 0.4, 10042));
+       
+       VMsList.add(new VM("rm2dev.orascomtunisie.com", 22, "Powered On", 0.6, "Linux 4.18.0-80.el8.x86_64 Red Hat Enterprise Linux release 8.0 (Ootpa)", "10.184.1.10", "MGH-OrgvDC (335a414f-75d3-4f1e-b36a-7a88ac1f202d)", new ArrayList<>(), 80, 6350, 34096, "Normal", 2020, 0.7, 560, 340, 0.4, 10042));
+  
+    	
+    	VMsList.add(new VM("aads", 8, "Powered On", 0.1, "Red Hat Enterprise Linux 7 (64-bit)", "10.25.33.57", "MGH-OrgvDC", new ArrayList<>(), 10240, 6144, 0, "Powered On", 200, 0.6, 50, 30, 0.1, 150));
+    	VMsList.add(new VM("aawg2", 8, "Powered On", 0.2, "Red Hat Enterprise Linux 7 (64-bit)", "10.25.33.125", "MGH-OrgvDC", new ArrayList<>(), 12288, 8192, 0, "Powered On", 200, 0.7, 50, 30, 0.2, 150));
+    	VMsList.add(new VM("acs-core-pp", 4, "Powered On", 0.3, "CentOS 6 (64-bit)", "10.46.212.11", "MGH-OrgvDC", new ArrayList<>(), 8192, 4096, 0, "Powered On", 200, 0.8, 50, 30, 0.3, 150));
+    	VMsList.add(new VM("acs-db-01", 12, "Powered On", 0.4, "CentOS 7 (64-bit)", "10.46.242.66", "MGH-OrgvDC", new ArrayList<>(), 32768, 16384, 0, "Powered On", 200, 0.9, 50, 30, 0.4, 150));
+    	VMsList.add(new VM("acs-db-02", 12, "Powered On", 0.5, "CentOS 7 (64-bit)", "10.46.242.67", "MGH-OrgvDC", new ArrayList<>(), 32768, 16384, 0, "Powered On", 200, 0.10, 50, 30, 0.5, 150));
+    	VMsList.add(new VM("acs-db-pp", 6, "Powered On", 0.6, "CentOS 7 (64-bit)", "10.46.216.12", "MGH-OrgvDC", new ArrayList<>(), 8192, 4096, 0, "Powered On", 200, 0.11, 50, 30, 0.6, 150));
+    	VMsList.add(new VM("acs-front-01", 12, "Powered On", 0.7, "CentOS 6 (64-bit)", "10.46.250.142", "MGH-OrgvDC", new ArrayList<>(), 32768, 16384, 0, "Powered On", 200, 0.12, 50, 30, 0.7, 150));
+    	VMsList.add(new VM("acs-front-02", 12, "Powered On", 0.8, "CentOS 6 (64-bit)", "10.46.250.143", "MGH-OrgvDC", new ArrayList<>(), 32768, 16384, 0, "Powered On", 200, 0.13, 50, 30, 0.8, 150));
+    	VMsList.add(new VM("acs-front-03", 8, "Powered On", 0.9, "CentOS 6 (64-bit)", "10.46.232.13", "MGH-OrgvDC", new ArrayList<>(), 26624, 13312, 0, "Powered On", 200, 0.14, 50, 30, 0.9, 150));
+    	VMsList.add(new VM("acs-front-04", 8, "Powered On", 0.10, "CentOS 6 (64-bit)", "10.46.232.14", "MGH-OrgvDC", new ArrayList<>(), 20480, 10240, 0, "Powered On", 200, 0.15, 50, 30, 0.10, 150));
+
+*/
+    
     }
+    
 
 
 }
