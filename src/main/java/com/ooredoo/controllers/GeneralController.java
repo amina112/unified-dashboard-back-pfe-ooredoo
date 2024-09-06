@@ -191,7 +191,7 @@ public class GeneralController {
         String DatastoreName = (String) request.get("Datastore");
         List<String> vmNames = (List<String>) request.get("VMs");
         for (String vmName : vmNames) {
-            GeneralService.createRelationshipBetweenDatastoreAndVM(DatastoreName, vmName);
+            GeneralService.createRelationshipBetweenDatacenterAndDatastore(DatastoreName, vmName);
         }
     }
 
