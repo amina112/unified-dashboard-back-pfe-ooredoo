@@ -5,8 +5,19 @@ import com.ooredoo.entities.DatastoreCluster;
 import com.ooredoo.entities.HypervisorCluster;
 import com.ooredoo.entities.VM;
 import com.ooredoo.repositories.DatastoreClusterRepository;
-import org.springframework.stereotype.Service;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -90,6 +101,57 @@ public class DatastoreClusterService {
     public void deleteSingleDatastoreClusterByName(String name) { DatastoreClusterRepository.deleteByName(name);}
     //delete multipe
     public void deleteMultipleDatastoreClustersByName(List<String> names) { DatastoreClusterRepository.deleteAllByNameIn(names);}
+    
+    public void importDatastoreClustersFromExcel(MultipartFile file) {
+        List<DatastoreCluster> datastoreClusters = new ArrayList<>();
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
 
+            Sheet sheet = workbook.getSheetAt(0); // Reading the first sheet
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) {
+                    continue; // Skip header row
+                }
 
+                // Read each cell and map it to the entity fields
+                String name = getStringValue(row.getCell(0));
+                double freeSpace = getNumericValue(row.getCell(1));
+                double totalCapacity = getNumericValue(row.getCell(2));
+
+                // Create a new DatastoreCluster object
+                DatastoreCluster datastoreCluster = new DatastoreCluster(name, freeSpace, totalCapacity);
+                datastoreClusters.add(datastoreCluster);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Save all DatastoreClusters to Neo4j database
+        DatastoreClusterRepository.saveAll(datastoreClusters);
+    }
+
+    private double getNumericValue(Cell cell) {
+        if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        } else if (cell != null && cell.getCellType() == CellType.STRING) {
+            String cellValue = cell.getStringCellValue().replace(" ", "").replace(",", "");
+            try {
+                return Double.parseDouble(cellValue);
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        return 0.0;
+    }
+
+    private String getStringValue(Cell cell) {
+        return cell != null && cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : "";
+    }
+
+    public List<DatastoreCluster> getDatastoreClusters() {
+        return DatastoreClusterRepository.findAll();
+    }
 }
+
+
