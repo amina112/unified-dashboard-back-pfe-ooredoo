@@ -4,6 +4,7 @@ import com.ooredoo.entities.Hypervisor;
 import com.ooredoo.services.HypervisorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,5 +67,24 @@ public class HypervisorController {
         hypervisorService.deleteMultipleHypervisorsByName(names);
         return ResponseEntity.ok("Hypervisors deleted successfully");
     }
+    // http://localhost:8089/ooredoo/Hypervisor/delete-multiple/uploadhyp
+    @PostMapping("/uploadhyp")
+    public String uploadHypervisorsFile(@RequestParam("filehyp") MultipartFile file) {
+        if (file.isEmpty()) {
+            return "Fichier vide!";
+        }
+        try {
+            hypervisorService.importHypervisorsFromExcel(file);
+            return "Données hyperviseurs importées avec succès!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erreur lors de l'importation des données.";
+        }
+    }
 
+    @GetMapping
+    public List<Hypervisor> getHypervisors() {
+        return hypervisorService.getHypervisors();
+    }
 }
+
