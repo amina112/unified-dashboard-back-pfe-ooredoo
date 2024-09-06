@@ -3,10 +3,25 @@ package com.ooredoo.services;
 import com.ooredoo.entities.Hypervisor;
 import com.ooredoo.entities.VM;
 import com.ooredoo.repositories.HypervisorRepository;
-import org.springframework.stereotype.Service;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
 
 
 @Service
@@ -72,5 +87,67 @@ public class HypervisorService {
     public void deleteSingleHypervisorByName(String name) { hypervisorRepository.deleteByName(name);}
     //delete multiple
     public void deleteMultipleHypervisorsByName(List<String> names) { hypervisorRepository.deleteAllByNameIn(names);}
+    
+    
+    
+    public void importHypervisorsFromExcel(MultipartFile file) {
+        List<Hypervisor> hypervisors = new ArrayList<>();
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
 
+            // Utiliser le bon type de Sheet
+
+            Sheet sheet = workbook.getSheetAt(0); // Lire la première feuille
+            for (Row row : sheet) {
+
+            // Utiliser une boucle for standard pour itérer sur les lignes
+            	 if (row.getRowNum() == 0) {
+                     continue; // Skip header row
+                 }
+
+                // Lire et traiter chaque cellule avec gestion des types et espaces
+                String name = getStringValue(row.getCell(0));
+                double CPU_Utilization = getNumericValue(row.getCell(1));
+                double Disk_Bandwidth = getNumericValue(row.getCell(2));
+                double Memory_Utilization = getNumericValue(row.getCell(3));
+                String Model = getStringValue(row.getCell(4));
+                String Status = getStringValue(row.getCell(5));
+                int Total_CPU = (int) getNumericValue(row.getCell(6));
+                int Total_Memory = (int) getNumericValue(row.getCell(7));
+                String Version = getStringValue(row.getCell(8));
+
+                Hypervisor hypervisor = new Hypervisor(name, CPU_Utilization, Disk_Bandwidth, Memory_Utilization, Model, Status, Total_CPU, Total_Memory, Version);
+                hypervisors.add(hypervisor);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Sauvegarder les Hypervisors dans la base de données Neo4j
+        hypervisorRepository.saveAll(hypervisors);
+    }
+
+    // Méthodes utilitaires pour gérer les types de cellules
+    private double getNumericValue(Cell cell) {
+        if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        } else if (cell != null && cell.getCellType() == CellType.STRING) {
+            String cellValue = cell.getStringCellValue().replace(" ", "").replace(",", "");
+            try {
+                return Double.parseDouble(cellValue);
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        return 0.0;
+    }
+
+    private String getStringValue(Cell cell) {
+        return cell != null && cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : "";
+    }
+
+    public List<Hypervisor> getHypervisors() {
+        return hypervisorRepository.findAll();
+    }
 }
