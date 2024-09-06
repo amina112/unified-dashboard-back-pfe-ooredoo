@@ -4,6 +4,7 @@ import com.ooredoo.entities.DatastoreCluster;
 import com.ooredoo.services.DatastoreClusterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -73,5 +74,26 @@ public class DatastoreClusterController {
         DatastoreClusterService.deleteMultipleDatastoreClustersByName(names);
         return ResponseEntity.ok("DatastoreClusters deleted successfully");
     }
+    
 
+    @PostMapping("/upload")
+    public String uploadDatastoreClustersFile(@RequestParam("filecl") MultipartFile file) {
+        if (file.isEmpty()) {
+            return "Empty file!";
+        }
+        try {
+            DatastoreClusterService.importDatastoreClustersFromExcel(file);
+            return "Datastore clusters imported successfully!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error importing datastore clusters.";
+        }
+    }
+
+    @GetMapping
+    public List<DatastoreCluster> getDatastoreClusters() {
+        return DatastoreClusterService.getDatastoreClusters();
+    }
 }
+
+
