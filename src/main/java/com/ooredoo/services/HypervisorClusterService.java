@@ -4,10 +4,23 @@ import com.ooredoo.entities.Hypervisor;
 import com.ooredoo.entities.HypervisorCluster;
 import com.ooredoo.entities.VM;
 import com.ooredoo.repositories.HypervisorClusterRepository;
-import org.springframework.stereotype.Service;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
 
 
 @Service
@@ -89,6 +102,60 @@ public class HypervisorClusterService {
     public void deleteSingleHypervisorClusterByName(String name) { HypervisorClusterRepository.deleteByName(name);}
     //delete multipe
     public void deleteMultipleHypervisorClustersByName(List<String> names) { HypervisorClusterRepository.deleteAllByNameIn(names);}
+    public void importHypervisorClustersFromExcel(MultipartFile file) {
+        List<HypervisorCluster> clusters = new ArrayList<>();
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0); // Lire la première feuille
+            for (Row row : sheet) {
+
+                if (row.getRowNum() == 0) {
+                    continue; // Sauter la ligne d'en-tête
+                }
+
+                // Lire et traiter chaque cellule avec gestion des types et espaces
+                String name = getStringValue(row.getCell(0));
+                int esxsInHighMemoryUsage = (int) getNumericValue(row.getCell(1));
+                int numberOfESX = (int) getNumericValue(row.getCell(2));
+                int totalCPU = (int) getNumericValue(row.getCell(3));
+                long totalMemory = (long) getNumericValue(row.getCell(4));
+
+                HypervisorCluster cluster = new HypervisorCluster(name, esxsInHighMemoryUsage, numberOfESX, totalCPU, totalMemory);
+                clusters.add(cluster);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Sauvegarder les HypervisorClusters dans la base de données Neo4j
+        HypervisorClusterRepository.saveAll(clusters);
+    }
+
+    // Méthodes utilitaires pour gérer les types de cellules
+    private double getNumericValue(Cell cell) {
+        if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        } else if (cell != null && cell.getCellType() == CellType.STRING) {
+            String cellValue = cell.getStringCellValue().replace(" ", "").replace(",", "");
+            try {
+                return Double.parseDouble(cellValue);
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        return 0.0;
+    }
+
+    private String getStringValue(Cell cell) {
+        return cell != null && cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : "";
+    }
+
+    public List<HypervisorCluster> getHypervisorClusters() {
+        return HypervisorClusterRepository.findAll();
+    }
+
 
 
 }
