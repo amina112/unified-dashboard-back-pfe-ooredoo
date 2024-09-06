@@ -5,7 +5,6 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @NodeEntity
@@ -33,7 +32,7 @@ public class VM {
     private int vCPUs;
 
     @Relationship(type = "Associated", direction = Relationship.INCOMING)
-    private List<Datastore> Datastores= new ArrayList<>();
+    private List<Datastore> Datastores;
 
     //Getters and Setters
     public double getCPU_Usage() {return CPU_Usage;}
@@ -88,34 +87,40 @@ public class VM {
     public void setvCPUs(int vCPUs) {this.vCPUs = vCPUs;}
 
     public List<Datastore> getDatastores() {return Datastores;}
-    public void setDatastores(List<Datastore> datastores) {Datastores = datastores;}
-
-    //constructor
-    public VM() { }
-
-    //constructor : name
-    public VM(String name) { this.name = name; }
+    
+    public void setDatastores(List<Datastore> datastores) {
+    	Datastores = datastores;
+    	}
 
 
-    // parameterized constructor : all
-    public VM(String name, int vCPUs, String state, double CPU_Usage, String guest_OS, String IP, String resource_Pool, List<Datastore> datastores, long throughput, long used_Space, long memory_Size, String status, long virtual_Disk_Bandwidth, double CPU_Utilization, long read_Throughput, long write_Throughput, double memory_Utilization, long provisioned_Space) {
-        this.CPU_Usage = CPU_Usage;
-        this.CPU_Utilization = CPU_Utilization;
-        Guest_OS = guest_OS;
-        this.IP = IP;
-        Memory_Size = memory_Size;
-        Memory_Utilization = memory_Utilization;
-        Provisioned_Space = provisioned_Space;
-        Read_Throughput = read_Throughput;
-        Resource_Pool = resource_Pool;
-        State = state;
-        Status = status;
-        Throughput = throughput;
-        Used_Space = used_Space;
-        Virtual_Disk_Bandwidth = virtual_Disk_Bandwidth;
-        Write_Throughput = write_Throughput;
-        this.name = name;
-        this.vCPUs = vCPUs;
-    }
+    // parameterized constructor
+   
+	public VM(double cPU_Usage, double cPU_Utilization, String iP,long memory_Size,double memory_Utilization,  
+			long provisioned_Space, long read_Throughput, String resource_Pool, String state,
+			String status, long throughput, long used_Space, long virtual_Disk_Bandwidth, long write_Throughput,
+			String name, int vCPUs, String guest_OS) {
+		CPU_Usage = cPU_Usage;
+		CPU_Utilization = cPU_Utilization;
+		Guest_OS = guest_OS;
+		IP = iP;
+		Memory_Size = memory_Size;
+		Memory_Utilization = memory_Utilization;
+		Provisioned_Space = provisioned_Space;
+		Read_Throughput = read_Throughput;
+		Resource_Pool = resource_Pool;
+		State = state;
+		Status = status;
+		Throughput = throughput;
+		Used_Space = used_Space;
+		Virtual_Disk_Bandwidth = virtual_Disk_Bandwidth;
+		Write_Throughput = write_Throughput;
+		this.name = name;
+		this.vCPUs = vCPUs;
+	}
+
+	public VM() {
+		// TODO Auto-generated constructor stub
+	}
+    
 
 }
