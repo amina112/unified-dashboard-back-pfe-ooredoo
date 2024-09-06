@@ -3,8 +3,19 @@ package com.ooredoo.services;
 import com.ooredoo.entities.Datastore;
 import com.ooredoo.entities.VM;
 import com.ooredoo.repositories.DatastoreRepository;
-import org.springframework.stereotype.Service;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -71,11 +82,72 @@ public class DatastoreService {
         // Save the updated Datastore node
         return DatastoreRepository.save(existingDatastore);
     }
-
+    
+   
     //---------------------- delete -------------------------------
     //delete single
     public void deleteSingleDatastoreByName(String name) { DatastoreRepository.deleteByName(name);}
     //delete multiple
     public void deleteMultipleDatastoresByName(List<String> names) { DatastoreRepository.deleteAllByNameIn(names);}
+    public void importDatastoresFromExcel(MultipartFile file) {
+        List<Datastore> datastores = new ArrayList<>();
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0); // Read the first sheet
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) {
+                    continue; // Skip header row
+                }
+
+                // Read and process each cell with type and whitespace management
+                String name = getStringValue(row.getCell(0));
+                double Bandwidth = getNumericValue(row.getCell(1));
+                double Capacity = getNumericValue(row.getCell(2));
+                double FreeSpace = getNumericValue(row.getCell(3));
+                int Hypervisors = (int) getNumericValue(row.getCell(4));
+                double Latency = getNumericValue(row.getCell(5));
+                double Provisioned = getNumericValue(row.getCell(6));
+                double Throughput = getNumericValue(row.getCell(7));
+                String Type = getStringValue(row.getCell(8));
+                double UsedSpace = getNumericValue(row.getCell(9));
+
+                Datastore datastore = new Datastore(name, Type, FreeSpace, Provisioned, Throughput, UsedSpace, Latency, Bandwidth, Hypervisors, Capacity);
+
+                datastores.add(datastore);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Save Datastores to the Neo4j database
+        DatastoreRepository.saveAll(datastores);
+    }
+
+    // Utility methods for handling cell types
+    private double getNumericValue(Cell cell) {
+        if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        } else if (cell != null && cell.getCellType() == CellType.STRING) {
+            String cellValue = cell.getStringCellValue().replace(" ", "").replace(",", "");
+            try {
+                return Double.parseDouble(cellValue);
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        return 0.0;
+    }
+
+    private String getStringValue(Cell cell) {
+        return cell != null && cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : "";
+    }
+
+    public List<Datastore> getDatastores() {
+        return DatastoreRepository.findAll();
+    }
+
 
 }
+
