@@ -125,7 +125,9 @@ public class VMService {
                 int vCPUs = (int) getNumericValue(row.getCell(15));
                 String Guest_OS = getStringValue(row.getCell(16));
 
-                VM vm = new VM(CPU_Usage, CPU_Utilization, IP, Memory_Size, Memory_Utilization, Provisioned_Space, Read_Throughput, Resource_Pool, State, Status, Throughput, Used_Space, Virtual_Disk_Bandwidth, Write_Throughput, name, vCPUs, Guest_OS);
+VM vm = new VM(CPU_Usage, CPU_Utilization, IP, Memory_Size, Memory_Utilization, Provisioned_Space,
+        Read_Throughput, Resource_Pool, null, State, Status, Throughput, Used_Space, 
+        Virtual_Disk_Bandwidth, Write_Throughput, name, vCPUs, Guest_OS);
                 vms.add(vm);
             }
 
